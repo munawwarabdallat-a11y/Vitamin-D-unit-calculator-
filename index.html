@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamin D Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitamin D Calculator</h1>
+    <div>
+        <input type="number" id="weight" placeholder="Your weight in kg" required>
+        <input type="number" id="duration" placeholder="Duration of sun exposure (minutes)" required>
+        <button id="calculate">Calculate Vitamin D</button>
+    </div>
+    <div id="result"></div>
+    <div id="location"></div>
+
+    <script>
+        const calculateButton = document.getElementById('calculate');
+        const resultDiv = document.getElementById('result');
+        const locationDiv = document.getElementById('location');
+
+        calculateButton.addEventListener('click', () => {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const duration = parseFloat(document.getElementById('duration').value);
+            const vitaminD = calculateVitaminD(weight, duration);
+            resultDiv.innerHTML = `Estimated Vitamin D produced: ${vitaminD.toFixed(2)} IU`;
+            getLocation();
+        });
+
+        function calculateVitaminD(weight, duration) {
+            // Simplified calculation; replace with actual formula as needed
+            return (weight * 0.5) + (duration * 20);
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                locationDiv.innerHTML = 'Geolocation is not supported by this browser.';
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            locationDiv.innerHTML = `Location retrieved: Latitude: ${lat}, Longitude: ${lon}`;
+            reverseGeocode(lat, lon);
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    locationDiv.innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    locationDiv.innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    locationDiv.innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    locationDiv.innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
+
+        function reverseGeocode(lat, lon) {
+            // Example API call for reverse geocoding (replace with actual API)
+            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
+                .then(response => response.json())
+                .then(data => {
+                    locationDiv.innerHTML += `<br>Location: ${data.locality}, ${data.countryName}`;
+                });
+        }
+    </script>
+</body>
+</html>
