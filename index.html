@@ -3,97 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitamin D Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        input {
-            margin: 10px 0;
-            padding: 10px;
-            width: 100%;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        #result {
-            margin-top: 20px;
-        }
-    </style>
+    <title>Vitamin D Calculator - Sun Exposure Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Vitamin D Calculator</h1>
-    <div>
-        <input type="number" id="weight" placeholder="Your weight in kg" required>
-        <input type="number" id="duration" placeholder="Duration of sun exposure (minutes)" required>
-        <button id="calculate">Calculate Vitamin D</button>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>☀️ Vitamin D Calculator</h1>
+                <p>Calculate your vitamin D synthesis from sun exposure</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Information Section -->
+            <section class="info-section">
+                <h2>About Vitamin D & Sun Exposure</h2>
+                <p>
+                    Vitamin D is essential for bone health, immune function, and mood regulation. Your body produces vitamin D when your skin is exposed to ultraviolet B (UVB) rays from the sun. The amount produced depends on:
+                </p>
+                <ul>
+                    <li><strong>Duration</strong> - How long you spend in the sun</li>
+                    <li><strong>Time of Day</strong> - When you're exposed (noon is optimal)</li>
+                    <li><strong>Skin Tone</strong> - Darker skin requires more sun exposure</li>
+                    <li><strong>Location</strong> - Geographic latitude affects UVB intensity</li>
+                </ul>
+                <p class="daily-recommendation">
+                    <strong>Daily Recommendation:</strong> 600-4,000 IU of Vitamin D per day (consult your doctor)
+                </p>
+            </section>
+
+            <!-- Calculator Form -->
+            <section class="form-section">
+                <h2>Calculate Your Vitamin D Production</h2>
+                <form id="vitaminDForm">
+                    
+                    <!-- Duration Input -->
+                    <div class="form-group">
+                        <label class="form-label">⏱️ Sun Exposure Duration</label>
+                        <div class="duration-inputs">
+                            <div class="input-wrapper">
+                                <input type="number" id="hours" name="hours" min="0" max="12" value="1" placeholder="Hours">
+                                <span class="input-unit">hours</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" id="minutes" name="minutes" min="0" max="59" value="0" placeholder="Minutes">
+                                <span class="input-unit">minutes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time of Day -->
+                    <div class="form-group">
+                        <label class="form-label">🕐 Time of Day</label>
+                        <p class="form-description">Morning = 0.6 | Noon = 1.0 (Best) | Afternoon = 0.5</p>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="timeOfDay" value="morning" checked>
+                                <span class="radio-text">🌅 Morning (6am-11am)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="timeOfDay" value="noon">
+                                <span class="radio-text">☀️ Noon (11am-2pm) - Best for Vitamin D</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="timeOfDay" value="afternoon">
+                                <span class="radio-text">🌤️ Afternoon (2pm-6pm)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Location Selection -->
+                    <div class="form-group">
+                        <label class="form-label">🌍 Geographic Location</label>
+                        <p class="form-description">Select your location to account for UVB intensity at your latitude</p>
+                        <select id="location" name="location" required>
+                            <option value="">-- Select Location --</option>
+                            <optgroup label="Americas">
+                                <option value="north-america">North America (USA, Canada, Mexico)</option>
+                                <option value="central-america">Central America</option>
+                                <option value="south-america">South America</option>
+                            </optgroup>
+                            <optgroup label="Europe">
+                                <option value="north-europe">North Europe (Scandinavia)</option>
+                                <option value="west-europe">West Europe (UK, France, Germany)</option>
+                                <option value="east-europe">East Europe (Poland, Ukraine, etc.)</option>
+                            </optgroup>
+                            <optgroup label="Asia & Middle East">
+                                <option value="middle-east">Middle East</option>
+                                <option value="gcc">GCC (Saudi, UAE, Kuwait, etc.)</option>
+                                <option value="south-asia">South Asia (India, Pakistan, Bangladesh)</option>
+                                <option value="china">China</option>
+                                <option value="japan">Japan</option>
+                                <option value="thailand">Thailand</option>
+                                <option value="russia">Russia</option>
+                            </optgroup>
+                            <optgroup label="Africa">
+                                <option value="africa">Africa (Sub-Saharan)</option>
+                            </optgroup>
+                            <optgroup label="Tropical Islands">
+                                <option value="maldives">Maldives 🏝️</option>
+                                <option value="borabora">Bora Bora 🏝️</option>
+                                <option value="mauritius">Mauritius 🏝️</option>
+                            </optgroup>
+                            <optgroup label="General">
+                                <option value="general">General / Equatorial</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Skin Tone Selection -->
+                    <div class="form-group">
+                        <label class="form-label">🎨 Skin Tone</label>
+                        <p class="form-description">Light = 1.0 | Medium = 0.7 | Dark = 0.5</p>
+                        <div class="radio-group skin-tone-group">
+                            <label class="radio-label">
+                                <input type="radio" name="skinTone" value="light" checked>
+                                <span class="skin-tone-box light"></span>
+                                <span class="radio-text">Light Skin (1.0x efficiency)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="skinTone" value="medium">
+                                <span class="skin-tone-box medium"></span>
+                                <span class="radio-text">Medium Skin (0.7x efficiency)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="skinTone" value="dark">
+                                <span class="skin-tone-box dark"></span>
+                                <span class="radio-text">Dark Skin (0.5x efficiency)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn">Calculate Vitamin D Production</button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <h2>📊 Your Vitamin D Results</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Sun Exposure Duration</div>
+                        <div class="result-value" id="resultDuration">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Time Factor</div>
+                        <div class="result-value" id="resultTimeFactor">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Skin Factor</div>
+                        <div class="result-value" id="resultSkinFactor">--</div>
+                    </div>
+                </div>
+
+                <div class="main-result-card">
+                    <div class="result-label main">Vitamin D Production</div>
+                    <div class="result-value main">
+                        <span id="resultVitaminD">0</span>
+                        <span class="unit"> IU</span>
+                    </div>
+                    <div id="resultStatus" class="status"></div>
+                </div>
+
+                <div class="formula-section">
+                    <h3>Formula Breakdown</h3>
+                    <div class="formula-box">
+                        <p>Duration × Time Factor × Skin Factor × Location Factor = Vitamin D (IU)</p>
+                        <p id="formulaBreakdown" class="formula-details">--</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 Tips for Maximum Vitamin D</h3>
+                    <ul>
+                        <li>Aim for <strong>noon sun exposure</strong> when UVB rays are strongest</li>
+                        <li>Expose <strong>large areas of skin</strong> (arms, legs, back) for better synthesis</li>
+                        <li>Note that <strong>sunscreen blocks UVB rays</strong> - expose skin for 10-20 minutes before applying</li>
+                        <li>People with <strong>darker skin</strong> need 3-6x more sun exposure for same vitamin D levels</li>
+                        <li>During <strong>winter or high latitudes</strong>, vitamin D synthesis may be minimal</li>
+                        <li>Consider <strong>vitamin D supplements</strong> if you live in high-latitude areas</li>
+                        <li>Consult your doctor about your specific vitamin D needs</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>⚕️ <strong>Disclaimer:</strong> This calculator provides estimates based on scientific research. Actual vitamin D synthesis varies based on many factors including cloud cover, altitude, and individual metabolism. Please consult your healthcare provider for personalized advice.</p>
+            <p>Created with ☀️ for better health awareness</p>
+        </footer>
     </div>
-    <div id="result"></div>
-    <div id="location"></div>
 
-    <script>
-        const calculateButton = document.getElementById('calculate');
-        const resultDiv = document.getElementById('result');
-        const locationDiv = document.getElementById('location');
-
-        calculateButton.addEventListener('click', () => {
-            const weight = parseFloat(document.getElementById('weight').value);
-            const duration = parseFloat(document.getElementById('duration').value);
-            const vitaminD = calculateVitaminD(weight, duration);
-            resultDiv.innerHTML = `Estimated Vitamin D produced: ${vitaminD.toFixed(2)} IU`;
-            getLocation();
-        });
-
-        function calculateVitaminD(weight, duration) {
-            // Simplified calculation; replace with actual formula as needed
-            return (weight * 0.5) + (duration * 20);
-        }
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                locationDiv.innerHTML = 'Geolocation is not supported by this browser.';
-            }
-        }
-
-        function showPosition(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            locationDiv.innerHTML = `Location retrieved: Latitude: ${lat}, Longitude: ${lon}`;
-            reverseGeocode(lat, lon);
-        }
-
-        function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    locationDiv.innerHTML = "User denied the request for Geolocation.";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    locationDiv.innerHTML = "Location information is unavailable.";
-                    break;
-                case error.TIMEOUT:
-                    locationDiv.innerHTML = "The request to get user location timed out.";
-                    break;
-                case error.UNKNOWN_ERROR:
-                    locationDiv.innerHTML = "An unknown error occurred.";
-                    break;
-            }
-        }
-
-        function reverseGeocode(lat, lon) {
-            // Example API call for reverse geocoding (replace with actual API)
-            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
-                .then(response => response.json())
-                .then(data => {
-                    locationDiv.innerHTML += `<br>Location: ${data.locality}, ${data.countryName}`;
-                });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
