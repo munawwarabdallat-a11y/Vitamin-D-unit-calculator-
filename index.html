@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitamin D Calculator - Sun Exposure Analyzer</title>
+    <title>Vitamin D Calculator</title>
     <style>
         * {
             margin: 0;
@@ -452,44 +452,6 @@
                         </div>
                     </div>
 
-                    <!-- Location Selection -->
-                    <div class="form-group">
-                        <label class="form-label">🌍 Location</label>
-                        <select id="location" name="location" required>
-                            <option value="">-- Select Location --</option>
-                            <optgroup label="Americas">
-                                <option value="north-america">North America</option>
-                                <option value="central-america">Central America</option>
-                                <option value="south-america">South America</option>
-                            </optgroup>
-                            <optgroup label="Europe">
-                                <option value="north-europe">North Europe</option>
-                                <option value="west-europe">West Europe</option>
-                                <option value="east-europe">East Europe</option>
-                            </optgroup>
-                            <optgroup label="Asia & Middle East">
-                                <option value="middle-east">Middle East</option>
-                                <option value="gcc">GCC (Gulf)</option>
-                                <option value="south-asia">South Asia</option>
-                                <option value="china">China</option>
-                                <option value="japan">Japan</option>
-                                <option value="thailand">Thailand</option>
-                                <option value="russia">Russia</option>
-                            </optgroup>
-                            <optgroup label="Africa">
-                                <option value="africa">Africa</option>
-                            </optgroup>
-                            <optgroup label="Islands">
-                                <option value="maldives">Maldives</option>
-                                <option value="borabora">Bora Bora</option>
-                                <option value="mauritius">Mauritius</option>
-                            </optgroup>
-                            <optgroup label="General">
-                                <option value="general">General / Equatorial</option>
-                            </optgroup>
-                        </select>
-                    </div>
-
                     <!-- Skin Tone Selection -->
                     <div class="form-group">
                         <label class="form-label">🎨 Skin Tone</label>
@@ -536,7 +498,7 @@
                 <div class="formula-section">
                     <h3>📝 Calculation Breakdown</h3>
                     <div class="formula-box">
-                        <p>Duration × Time Factor × Skin Factor × Location Factor</p>
+                        <p>Formula: Duration × Time Factor × Skin Factor</p>
                         <p id="formulaBreakdown" class="formula-details">--</p>
                     </div>
                 </div>
@@ -564,28 +526,6 @@
             dark: 0.5
         };
 
-        // Base vitamin D production per hour (in IU)
-        const LOCATION_FACTORS = {
-            'south-asia': 300,
-            'north-america': 250,
-            'central-america': 350,
-            'south-america': 350,
-            'middle-east': 400,
-            'gcc': 420,
-            'north-europe': 100,
-            'west-europe': 150,
-            'east-europe': 120,
-            'russia': 80,
-            'africa': 450,
-            'china': 200,
-            'japan': 200,
-            'thailand': 400,
-            'maldives': 450,
-            'borabora': 450,
-            'mauritius': 450,
-            'general': 250
-        };
-
         // Form submission handler
         document.getElementById('vitaminDForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -593,46 +533,53 @@
         });
 
         function calculateVitaminD() {
+            console.log('Calculate button clicked');
+
             // Get form values
             const hours = parseInt(document.getElementById('hours').value) || 0;
             const minutes = parseInt(document.getElementById('minutes').value) || 0;
             const timeOfDay = document.querySelector('input[name="timeOfDay"]:checked').value;
-            const location = document.getElementById('location').value;
             const skinTone = document.querySelector('input[name="skinTone"]:checked').value;
 
-            // Validation
-            if (!location) {
-                alert('Please select a location');
-                return;
-            }
+            console.log('Hours:', hours);
+            console.log('Minutes:', minutes);
+            console.log('Time of Day:', timeOfDay);
+            console.log('Skin Tone:', skinTone);
 
             // Convert duration to hours (decimal)
             const totalDuration = hours + (minutes / 60);
 
             if (totalDuration === 0) {
-                alert('Please enter a duration');
+                alert('Please enter a duration (hours and/or minutes)');
                 return;
             }
 
             // Get factors
             const timeFactor = TIME_FACTORS[timeOfDay];
             const skinFactor = SKIN_FACTORS[skinTone];
-            const locationFactor = LOCATION_FACTORS[location];
 
-            // Calculate vitamin D production
-            const vitaminDResult = Math.round(totalDuration * timeFactor * skinFactor * locationFactor);
+            console.log('Total Duration:', totalDuration);
+            console.log('Time Factor:', timeFactor);
+            console.log('Skin Factor:', skinFactor);
+
+            // Calculate vitamin D production using the formula: Duration × Time Factor × Skin Factor
+            const vitaminDResult = totalDuration * timeFactor * skinFactor;
+
+            console.log('Vitamin D Result:', vitaminDResult);
 
             // Display results
-            displayResults(totalDuration, timeFactor, skinFactor, vitaminDResult, location, timeOfDay, skinTone, locationFactor);
+            displayResults(totalDuration, timeFactor, skinFactor, vitaminDResult, timeOfDay, skinTone);
         }
 
-        function displayResults(duration, timeFactor, skinFactor, vitaminDResult, location, timeOfDay, skinTone, locationFactor) {
-            // Update result value
-            document.getElementById('resultVitaminD').textContent = vitaminDResult.toLocaleString();
+        function displayResults(duration, timeFactor, skinFactor, vitaminDResult, timeOfDay, skinTone) {
+            // Update result value - round to 2 decimal places
+            const resultRounded = Math.round(vitaminDResult * 100) / 100;
+            document.getElementById('resultVitaminD').textContent = resultRounded;
+
+            console.log('Displaying result:', resultRounded);
 
             // Display formula breakdown
-            const locationName = getLocationName(location);
-            const formulaText = `${duration.toFixed(2)} hrs × ${timeFactor} × ${skinFactor} × ${locationFactor} = ${vitaminDResult} IU`;
+            const formulaText = `${duration.toFixed(2)} hours × ${timeFactor} (${timeOfDay}) × ${skinFactor} (${skinTone}) = ${resultRounded} IU`;
             document.getElementById('formulaBreakdown').textContent = formulaText;
 
             // Display status
@@ -640,30 +587,8 @@
             const status = getVitaminDStatus(vitaminDResult);
             statusElement.textContent = status.message;
             statusElement.className = 'status ' + status.class;
-        }
 
-        function getLocationName(location) {
-            const locationNames = {
-                'south-asia': 'South Asia',
-                'north-america': 'North America',
-                'central-america': 'Central America',
-                'south-america': 'South America',
-                'middle-east': 'Middle East',
-                'gcc': 'GCC',
-                'north-europe': 'North Europe',
-                'west-europe': 'West Europe',
-                'east-europe': 'East Europe',
-                'russia': 'Russia',
-                'africa': 'Africa',
-                'china': 'China',
-                'japan': 'Japan',
-                'thailand': 'Thailand',
-                'maldives': 'Maldives',
-                'borabora': 'Bora Bora',
-                'mauritius': 'Mauritius',
-                'general': 'General'
-            };
-            return locationNames[location] || location;
+            console.log('Status:', status);
         }
 
         function getVitaminDStatus(iuAmount) {
